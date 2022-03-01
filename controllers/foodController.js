@@ -2,6 +2,7 @@ const { default: mongoose } = require('mongoose');
 const Food = require('../models/food');
 const Category = require('../models/category');
 const User = require('../models/user');
+const Restaurant = require('../models/restaurant');
 
 
 const getAllFood = async (req, res, next) => {
@@ -95,12 +96,24 @@ const getCart = async (req, res, next) => {
     }
 }
 
+const getCartByUserId = async (req, res, next) => {
+    try {
+        const _user = await User.findById(req.params.userId);
+        const _cartItems = await _user.getCart();
+        res.json(_cartItems);
+    } catch (error) {
+        res.json({
+            message: error
+        })
+    }
+}
+
 const postCart = async (req, res, next) => {
     try {
         const _user = await User.findById(req.session.userID);
         const _food = await Food.findById(req.body.foodId);
         await _user.addToCart(_food);
-        res.json(_user.cart.cartItems);
+        res.send();
     } catch (error) {
         res.json({
             message: error
@@ -113,8 +126,7 @@ const deleteCartItem = async (req, res, next) => {
     try {
         const _user = await User.findById(req.session.userID);
         await _user.deleteCartItem(_foodId);
-        console.log(_foodId);
-        res.redirect('/cart');
+        res.json(_user.cart.cartItems);
     } catch (error) {
         res.json({
             message: error
@@ -135,6 +147,17 @@ const clearCart = async (req, res, next) => {
 
 }
 
+const getAllRestaurant = async (req, res, next) => {
+    try {
+        const _restaurants = await Restaurant.find();
+        res.json(_restaurants);
+    } catch (error) {
+        res.json({
+            message: error
+        });
+    }
+}
+
 module.exports = {
     getAllFood,
     getFood,
@@ -145,5 +168,7 @@ module.exports = {
     postCart,
     getCart,
     deleteCartItem,
-    clearCart
+    clearCart,
+    getAllRestaurant,
+    getCartByUserId
 }

@@ -11,6 +11,17 @@ exports.getAllUser = async (req, res, next) => {
     }
 }
 
+exports.getUserById = async (req, res, next) => {
+    try {
+        const _user = await User.findById(req.params.userId);
+        res.json(_user);
+    } catch (error) {
+        res.json({
+            message: error
+        })
+    }
+}
+
 exports.registerUser = async (req, res, next) => {
     try {
         const user = await User.findOne({ email: req.body.email });
@@ -61,6 +72,8 @@ exports.postLogin = async (req, res, next) => {
         });
     }
 }
+
+
 
 
 

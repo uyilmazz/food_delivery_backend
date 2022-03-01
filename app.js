@@ -16,6 +16,11 @@ app.use(session({
     saveUninitialized: true,
 }));
 
+app.use((req, res, next) => {
+    req.session.userID = '6214c15f9ccae1c60c0eca14';
+    next();
+});
+
 const foodRouter = require('./routers/foodRouter');
 const authRouter = require('./routers/authRouter');
 

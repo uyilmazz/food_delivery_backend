@@ -39,7 +39,7 @@ const userSchema = new Schema({
 }, { timestamps: true });
 
 
-userSchema.methods.getCart = function () {
+userSchema.methods.getCart = async function () {
     const ids = this.cart.cartItems.map(food => {
         return food.foodId;
     });
@@ -87,13 +87,19 @@ userSchema.methods.addToCart = function (food) {
 
 userSchema.methods.deleteCartItem = function (foodId) {
     const cartItems = [...this.cart.cartItems];
-    const _cartItems = cartItems.filter((food) => {
-        return food.foodId.toString() !== foodId.toString();
+    const itemQuantity = 1;
+    const _itemIndex = this.cart.cartItems.findIndex(food => {
+        return food.foodId.toString() === foodId.toString();
     });
 
+    if (cartItems[_itemIndex].quantity > 1) {
+        cartItems[_itemIndex].quantity -= itemQuantity;
+    } else {
+        cartItems.splice(_itemIndex, 1);
+    }
     return User.updateOne({ _id: this._id }, {
         cart: {
-            cartItems: _cartItems
+            cartItems: cartItems
         }
     });
 }
