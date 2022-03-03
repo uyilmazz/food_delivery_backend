@@ -85,7 +85,7 @@ userSchema.methods.addToCart = function (food) {
     return this.save();
 }
 
-userSchema.methods.deleteCartItem = function (foodId) {
+userSchema.methods.decrementCartItem = function (foodId) {
     const cartItems = [...this.cart.cartItems];
     const itemQuantity = 1;
     const _itemIndex = this.cart.cartItems.findIndex(food => {
@@ -102,6 +102,20 @@ userSchema.methods.deleteCartItem = function (foodId) {
             cartItems: cartItems
         }
     });
+}
+
+userSchema.methods.removeCartItem = function (foodId) {
+    const _updateCartItems = this.cart.cartItems.filter(food => {
+        return foodId.toString() !== food.foodId.toString();
+    });
+
+    return User.updateOne({ _id: this._id }, {
+        cart: {
+            cartItems: _updateCartItems
+        }
+    });
+
+
 }
 
 userSchema.methods.clearCart = function () {

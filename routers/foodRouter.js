@@ -21,7 +21,8 @@ router.get('/restaurants', foodController.getAllRestaurant);
 router.get('/cart', foodController.getCart);
 router.get('/cart/:userId', foodController.getCartByUserId);
 router.post('/cart', foodController.postCart);
-router.post('/delete-cartItem', foodController.deleteCartItem);
+router.post('/decrement-cartItem', foodController.decrementCartItem);
+router.post('/remove-cartItem', foodController.removeCartItem);
 router.get('/clear-cart', foodController.clearCart);
 
 

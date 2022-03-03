@@ -121,16 +121,30 @@ const postCart = async (req, res, next) => {
     }
 }
 
-const deleteCartItem = async (req, res, next) => {
+const decrementCartItem = async (req, res, next) => {
     const _foodId = req.body.foodId;
     try {
         const _user = await User.findById(req.session.userID);
-        await _user.deleteCartItem(_foodId);
+        await _user.decrementCartItem(_foodId);
         res.json(_user.cart.cartItems);
     } catch (error) {
         res.json({
             message: error
         })
+    }
+}
+
+const removeCartItem = async (req, res, next) => {
+    const _foodId = req.body.foodId;
+    console.log(_foodId);
+    try {
+        const _user = await User.findById(req.session.userID);
+        await _user.removeCartItem(_foodId);
+        res.send();
+    } catch (error) {
+        res.json({
+            message: error
+        });
     }
 }
 
@@ -167,8 +181,9 @@ module.exports = {
     getFoodsByRestaurantId,
     postCart,
     getCart,
-    deleteCartItem,
+    decrementCartItem,
     clearCart,
     getAllRestaurant,
-    getCartByUserId
+    getCartByUserId,
+    removeCartItem
 }

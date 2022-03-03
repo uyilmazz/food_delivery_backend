@@ -1,5 +1,6 @@
 const User = require('../models/user');
 
+
 exports.getAllUser = async (req, res, next) => {
     try {
         const users = await User.find();
@@ -58,17 +59,17 @@ exports.postLogin = async (req, res, next) => {
     try {
         const _user = await User.findOne({ email, password });
         if (!_user) {
-            res.json({
+            res.status(401).json({
                 message: `User doesn't exist!`
             })
         } else {
             req.session.userID = _user._id;
-            res.json(_user);
+            res.status(200).json(_user);
         }
 
     } catch (error) {
         res.json({
-            message: error
+            message: 'error' + error
         });
     }
 }
