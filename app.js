@@ -17,7 +17,7 @@ app.use(session({
 }));
 
 app.use((req, res, next) => {
-    req.session.userID = '6214c15f9ccae1c60c0eca14';
+    req.session.userID = null;
     next();
 });
 

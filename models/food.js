@@ -21,7 +21,6 @@ const foodSchema = Schema({
     ],
     imageUrl: {
         type: String,
-        // required: true
     },
     cookingTime: {
         type: Number
@@ -29,12 +28,10 @@ const foodSchema = Schema({
     categories: [{
         type: Schema.Types.ObjectId,
         ref: 'Category',
-        // required: true
     }],
     restaurantID: {
         type: Schema.Types.ObjectId,
         ref: 'Restaurant',
-        // required: true
     }
 
 }, { timestamps: true });

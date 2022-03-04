@@ -7,8 +7,6 @@ router.post('/foods', foodController.postFood);
 router.get('/foods/:id', foodController.getFood);
 
 // CATEGORY
-
-// TODO get foods by categories url will change
 router.get('/categories/:categoryid', foodController.getFoodsByCategoryId);
 router.get('/categories', foodController.getAllCategory);
 
@@ -23,7 +21,7 @@ router.get('/cart/:userId', foodController.getCartByUserId);
 router.post('/cart', foodController.postCart);
 router.post('/decrement-cartItem', foodController.decrementCartItem);
 router.post('/remove-cartItem', foodController.removeCartItem);
-router.get('/clear-cart', foodController.clearCart);
+router.post('/clear-cart', foodController.clearCart);
 
 
 module.exports = router;
