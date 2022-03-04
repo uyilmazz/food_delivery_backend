@@ -1,25 +1,14 @@
 const User = require('../models/user');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
-
-exports.getAllUser = async (req, res, next) => {
-    try {
-        const users = await User.find();
-        res.json(users);
-    } catch (error) {
-        res.json({
-            message: error
-        });
-    }
-}
 
 exports.getUserById = async (req, res, next) => {
     try {
         const _user = await User.findById(req.params.userId);
         res.json(_user);
     } catch (error) {
-        res.json({
-            message: error
-        })
+        console.log(error);
     }
 }
 
@@ -37,41 +26,61 @@ exports.registerUser = async (req, res, next) => {
                 phoneNumber: req.body.phoneNumber,
                 password: req.body.password,
                 cart: {
-                    cartItems: req.body.cartItems
+                    cartItems: []
                 }
             });
 
+            const token = jwt.sign(_user.email, process.env.JWT_SECRET_KEY);
+            _user.token = token;
+
             await _user.save();
-            res.json(_user);
+            res.status(201).json(_user);
         }
     } catch (error) {
-        res.json({
-            message: error
-        });
+        console.log(error);
     }
 }
 
 exports.postLogin = async (req, res, next) => {
-
-    const email = req.body.email;
-    const password = req.body.password;
-
     try {
+        const email = req.body.email;
+        const password = req.body.password;
         const _user = await User.findOne({ email, password });
         if (!_user) {
-            res.status(401).json({
-                message: `User doesn't exist!`
-            })
+            res.status(201).send();
         } else {
-            req.session.userID = _user._id;
+            const token = jwt.sign(_user.email, process.env.JWT_SECRET_KEY);
+            _user.token = token;
             res.status(200).json(_user);
+        }
+    } catch (error) {
+        console.log('post Login error');
+    }
+}
+
+exports.verifyToken = async (req, res, next) => {
+
+    try {
+        const token = req.body.token;
+        console.log(token);
+        if (!token) {
+            res.status(201).send();
+        } else {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+            const _user = await User.findOne({ email: decoded });
+            if (_user) {
+                res.status(200).json(_user);
+            } else {
+                res.status(201).send();
+            }
         }
 
     } catch (error) {
-        res.json({
-            message: 'error' + error
-        });
+        console.log(error);
     }
+
+
+
 }
 
 

@@ -10,9 +10,7 @@ const getAllFood = async (req, res, next) => {
         const foods = await Food.find();
         res.json(foods);
     } catch (error) {
-        res.json({
-            message: error
-        });
+        console.log(error);
     }
 }
 
@@ -21,9 +19,7 @@ const getFood = async (req, res, next) => {
         const food = await Food.findById(req.params.id);
         res.json(food);
     } catch (error) {
-        res.json({
-            message: error
-        });
+        console.log(error);
     }
 }
 
@@ -40,9 +36,7 @@ const postFood = async (req, res, next) => {
         await food.save();
         res.json(food);
     } catch (error) {
-        res.json({
-            message: error
-        });
+        console.log(error);
     }
 }
 
@@ -50,12 +44,9 @@ const getFoodsByCategoryId = async (req, res, next) => {
     const categoryId = req.params.categoryid;
     try {
         const foods = await Food.find({ categories: { $in: mongoose.Types.ObjectId(categoryId) } });
-        console.log(categoryId);
         res.json(foods);
     } catch (error) {
-        res.json({
-            message: error
-        });
+        console.log(error);
     }
 
 }
@@ -65,9 +56,7 @@ const getAllCategory = async (req, res, next) => {
         const categories = await Category.find();
         res.json(categories);
     } catch (error) {
-        res.json({
-            message: error
-        })
+        console.log(error);
     }
 }
 
@@ -77,22 +66,18 @@ const getFoodsByRestaurantId = async (req, res, next) => {
         const foods = await Food.find({ restaurantID: restaurantid });
         res.json(foods);
     } catch (error) {
-        res.json({
-            message: error
-        })
+        console.log(error);
     }
 }
 
 const getCart = async (req, res, next) => {
     try {
-        const _user = await User.findById(req.session.userID);
+        const _user = await User.findById(req.body.userID);
         const _cart = await _user.getCart();
         res.json(_cart);
 
     } catch (error) {
-        res.json({
-            message: error
-        })
+        console.log(error);
     }
 }
 
@@ -102,61 +87,50 @@ const getCartByUserId = async (req, res, next) => {
         const _cartItems = await _user.getCart();
         res.json(_cartItems);
     } catch (error) {
-        res.json({
-            message: error
-        })
+        console.log(error);
     }
 }
 
 const postCart = async (req, res, next) => {
     try {
-        const _user = await User.findById(req.session.userID);
+        const _user = await User.findById(req.body.userID);
         const _food = await Food.findById(req.body.foodId);
         await _user.addToCart(_food);
-        res.send();
+        res.status(200).send();
     } catch (error) {
-        res.json({
-            message: error
-        })
+        console.log(error);
     }
 }
 
 const decrementCartItem = async (req, res, next) => {
     const _foodId = req.body.foodId;
     try {
-        const _user = await User.findById(req.session.userID);
+        const _user = await User.findById(req.body.userID);
         await _user.decrementCartItem(_foodId);
         res.json(_user.cart.cartItems);
     } catch (error) {
-        res.json({
-            message: error
-        })
+        console.log(error);
     }
 }
 
 const removeCartItem = async (req, res, next) => {
     const _foodId = req.body.foodId;
-    console.log(_foodId);
     try {
-        const _user = await User.findById(req.session.userID);
+        const _user = await User.findById(req.body.userID);
         await _user.removeCartItem(_foodId);
         res.send();
     } catch (error) {
-        res.json({
-            message: error
-        });
+        console.log(error);
     }
 }
 
 const clearCart = async (req, res, next) => {
     try {
-        const _user = await User.findById(req.session.userID);
+        const _user = await User.findById(req.body.userID);
         await _user.clearCart();
-        res.redirect('/cart');
+        res.send();
     } catch (error) {
-        res.json({
-            message: error
-        });
+        console.log(error);
     }
 
 }
@@ -166,9 +140,7 @@ const getAllRestaurant = async (req, res, next) => {
         const _restaurants = await Restaurant.find();
         res.json(_restaurants);
     } catch (error) {
-        res.json({
-            message: error
-        });
+        console.log(error);
     }
 }
 

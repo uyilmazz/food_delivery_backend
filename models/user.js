@@ -21,6 +21,9 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    token: {
+        type: String
+    },
     cart: {
         cartItems: [
             {
@@ -43,8 +46,6 @@ userSchema.methods.getCart = async function () {
     const ids = this.cart.cartItems.map(food => {
         return food.foodId;
     });
-
-    console.log(ids);
     return Food.find({
         _id: {
             $in: ids
